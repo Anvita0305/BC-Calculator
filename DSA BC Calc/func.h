@@ -7,3 +7,4 @@ number *sub(number *a, number *b);
 number *mult(number *a, number *b);
 number *division(number *a, number *b);
 number *modulus(number *a, number *b);
+number* power(number* m,number* n);
