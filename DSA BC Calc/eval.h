@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stack.h"
-#include "func.h"
+#include "operations.h"
 #include <limits.h>
 #define OPERAND 100
 #define OPERATOR 200
