@@ -4,9 +4,9 @@
 #include "stack.h"
 #include "operations.h"
 #include <limits.h>
-#define OPERAND 100
-#define OPERATOR 200
-#define END 300
+#define OPERAND 1
+#define OPERATOR 2
+#define END 3
 
 typedef struct token
 {
@@ -19,6 +19,6 @@ int Precedence(char op);
 int Associvity(char op);
 int isDigit(char c);
 int isoperator(char c);
-token getValue(char *expr, int *reset);
+token getValue(char *expr,int* reset);
 number *infix_eval(char *exp);
 int read(char *line, int len);

@@ -306,12 +306,9 @@ number *mult(number *a, number *b)
 		{
 			addAtEnd(temp, '0');
 		}
-
 		ans = add(ans, temp);
 		free(temp);
 	}
-
-	// assigning sign to answer
 	if (a->sign == b->sign)
 	{
 		ans->sign = PLUS;
@@ -327,37 +324,16 @@ number *mult(number *a, number *b)
 	return ans;
 }
 
-// Division Operation.
 number *division(number *m, number *n)
 {
-	// Handling Zero division error
 	if (zeroNumber(*n) == 0)
 	{
 		printf("Dividing by Zero is not allowed.\n");
 		return NULL;
 	}
-
-	// Removing zeros from left
 	zeroRemove(m);
 	zeroRemove(n);
-
-	int k = m->dec > n->dec ? m->dec : n->dec;
 	int i = 0;
-
-	while (i < k)
-	{
-		if (m->dec > 0)
-			m->dec--;
-		else
-			addAtEnd(m, '0');
-
-		if (n->dec > 0)
-			n->dec--;
-		else
-			addAtEnd(n, '0');
-		i++;
-	}
-
 	i = 9;
 
 	number *c, *d, *ans, *q, *pro;
@@ -371,8 +347,7 @@ number *division(number *m, number *n)
 	initNumber(c);
 	initNumber(q);
 	initNumber(d);
-
-	// Initialising sign for ans
+	
 	if (m->sign == n->sign)
 	{
 		q->sign = PLUS;
@@ -434,50 +409,8 @@ number *division(number *m, number *n)
 	return q;
 }
 
-// FORMULA :- remainder = a - floor_division(a/b) * b
-number *modulus(number *a, number *b)
-{
-	if (zeroNumber(*b) == 0)
-	{
-		printf("ERROR : Modulo by Zero is not allowed.\n");
-		return NULL;
-	}
-	int tempsign;
-	if (a->sign == MINUS)
-	{
-		tempsign = MINUS;
-		a->sign = b->sign = PLUS;
-	}
-	else
-	{
-		tempsign = PLUS;
-		a->sign = b->sign = PLUS;
-	}
-	decimalEqual(a, b);
-	int a_dec = a->dec;
-	number *ans = (number *)malloc(sizeof(number));
-	number *temp = (number *)malloc(sizeof(number));
-	initNumber(ans);
-	initNumber(temp);
-	temp = division(a, b);
-	if (temp->dec != 0)
-	{
-		int pos = length(*temp) - 1;
-		while (temp->dec != 0)
-		{
-			remov(temp, pos);
-			temp->dec--;
-			pos--;
-		}
-	}
-	temp = mult(temp, b);
-	ans = sub(a, temp);
-	ans->sign = tempsign;
-	ans->dec = a_dec;
-	return ans;
-}
-
 // m^n
+//case n->to do
 number *power(number *m, number *n)
 {
 	number *temp1 = m;

@@ -1,18 +1,20 @@
+#include<stdio.h>
 #include "eval.h"
 
 int main()
 {
-    number *r;
+    number *res;
     char expr[3000];
+    printf("\n");
     printf("For quiting the program click q or Q\n");
     printf("\n");
-    while (read(expr, 3000))
+    while (read(expr, 1000))
     {
-        r = infix_eval(expr);
-        if (r != NULL)
-            printNumber(*r);
+        res = infix_eval(expr);
+        if (res != NULL)
+            printNumber(*res);
         else
-            printf("Invalid  Expression\n");
+            printf("Invalid Expression enter again\n");
     }
     return 0;
 }

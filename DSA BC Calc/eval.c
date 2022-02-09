@@ -22,18 +22,15 @@ number *evaluate(number *nos1, number *nos2, char op)
         number *result = division(nos1, nos2);
         return result;
     }
-    else if (op == '%')
+    else if (op == '^')
     {
-        number *result = modulus(nos1, nos2);
+        number *result = power(nos1, nos2);
         return result;
     }
-    else if(op=='^')
+    else
     {
-        number *result=power(nos1,nos2);
-        return result;
+        return NULL;
     }
-
-    return NULL;
 }
 
 int Precedence(char op)
@@ -50,9 +47,9 @@ int Precedence(char op)
 
 int Associvity(char op)
 {
-    if (op == '^')
-        return 1; // Associvity is from right to left.
-    else          // Associvity is from left to right.(+, -, *, /)
+    if (op == '^') // l->r
+        return 1;
+    else
         return 0;
 }
 
@@ -74,37 +71,33 @@ int isoperator(char c)
 {
     int m = 0;
 
-    if ((c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '%') || (c == '^'))
+    if ((c == '+') || (c == '-') || (c == '*') || (c == '/') || (c == '^'))
     {
         m = 1;
     }
-
     return m;
 }
 
 token getValue(char *expr, int *reset)
 {
     static int i = 0;
-
-    if (*reset == 1)
+    if (*reset == 1) // resets the entire eqn
     {
         *reset = 0;
         i = 0;
     }
-
     number *a = (number *)malloc(sizeof(number));
     initNumber(a);
 
     char c = expr[i];
     token t;
-    int decipt = 0;
+    int deciPt = 0;
 
     while (1)
     {
         if (c == '(' || c == ')')
         {
             i++;
-
             while (expr[i] == ' ')
             {
                 i++;
@@ -121,12 +114,12 @@ token getValue(char *expr, int *reset)
             {
                 if (expr[j] == '.')
                 {
-                    decipt = 1;
+                    deciPt = 1;
                 }
                 else
                 {
                     addAtEnd(a, expr[j]);
-                    if (decipt == 1)
+                    if (deciPt == 1)
                     {
                         a->dec++;
                     }
@@ -170,29 +163,19 @@ number *infix_eval(char *exp)
 
     int reset = 1;
 
-    token t, prev;
-    prev.type = 1;
-    prev.op = '#';
+    token t;
 
     while (1)
     {
         t = getValue(exp, &reset);
-        if (t.type == prev.type)
-        {
-            if (t.op != '(' && t.op != ')' && prev.op != '(' && prev.op != ')')
-            {
-                return NULL;
-            }
-        }
-        prev.type = t.type;
-        prev.op = t.op;
+
         if (t.type == OPERAND)
         {
             nodePush(&num_st, t.num);
         }
         else if (t.type == OPERATOR)
         {
-            if (t.op == '(') // push operator token on character stack
+            if (t.op == '(')
             {
                 charPush(&char_st, t.op);
             }
@@ -200,15 +183,13 @@ number *infix_eval(char *exp)
             {
                 while (charPeek(char_st) != '(')
                 {
-                    char currchar = charPop(&char_st); // currchar in this operator is stored
+                    char currchar = charPop(&char_st);
                     number *a, *b;
                     a = nodePop(&num_st);
                     b = nodePop(&num_st);
-
                     number *result = evaluate(b, a, currchar);
                     nodePush(&num_st, result);
                 }
-                // char popped=cpop(&cs);        // for popping the ( opening bracket
                 charPop(&char_st);
             }
             else
@@ -259,7 +240,6 @@ number *infix_eval(char *exp)
                         else
                         {
                             int ispushed = 0;
-
                             while (top_precedence == in_precedence)
                             {
                                 char popped = charPop(&char_st);
@@ -304,7 +284,7 @@ number *infix_eval(char *exp)
 
     while (!charIsEmpty(&char_st))
     {
-        char currchar = charPop(&char_st); // currchar in this operator is stored
+        char currchar = charPop(&char_st);
         number *a, *b;
         a = nodePop(&num_st);
         b = nodePop(&num_st);
@@ -316,9 +296,9 @@ number *infix_eval(char *exp)
     return nodePop(&num_st);
 }
 
-int read(char *line, int len)
+int read(char *expr, int len)
 {
-    int i, opening_brac = 0, closing_brac = 0, mask = 0, flag = 0;
+    int i, openBrac = 0, closeBrac = 0, mask = 0, flag = 0;
     char ch;
     i = 0;
     while (i < len - 1)
@@ -332,28 +312,27 @@ int read(char *line, int len)
         // checking brackets
         if (ch == '(')
         {
-            opening_brac++;
+            openBrac++;
         }
         else if (ch == ')')
         {
-            closing_brac++;
+            closeBrac++;
         }
-        if (closing_brac > opening_brac)
+        if (closeBrac > openBrac)
         {
             flag = 1;
             break;
         }
-        // end condition
         if (ch == '\n')
         {
-            line[i++] = '\0';
+            expr[i++] = '\0';
             mask = 1;
             break;
         }
         else
-            line[i++] = ch;
+            expr[i++] = ch;
     }
-    if ((flag == 1) || (opening_brac != closing_brac))
+    if ((flag == 1) || (openBrac != closeBrac))
     {
         printf("Invalid Expression! Please check for Brackets.\n");
         return 0;
@@ -362,6 +341,6 @@ int read(char *line, int len)
     {
         return i - 1;
     }
-    line[len - 1] = '\0';
+    expr[len - 1] = '\0';
     return len - 1;
 }

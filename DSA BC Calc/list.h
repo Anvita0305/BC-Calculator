@@ -15,10 +15,10 @@ typedef struct number
 }number;
 
 
-void initNumber(number *num);					//To initialize the number
-void addAtEnd(number *num, char c);			//Append digit at end of number
-void printNumber(number num);					//To print the entire number (all digits)
-void addInFront(number *num, int n);			//Append at start
-int length(number num);						//To find the length of number
-void remov(number *num, int pos);				//To remov a digit at an index p inside linked list
-void zeroRemove(number *num);					//To remov extra zeros on extreme left and on extreme right
+void initNumber(number *num);					
+void addAtEnd(number *num, char c);			
+void printNumber(number num);					
+void addInFront(number *num, int n);			
+int length(number num);						
+void remov(number *num, int pos);				
+void zeroRemove(number *num);					
