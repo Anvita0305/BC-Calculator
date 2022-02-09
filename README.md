@@ -1,5 +1,5 @@
 # DSA-Project BC Calculator
-Operations Possible:
+Operations Performed:
 <ul>
   <li>Addition</li>
   <li>Subtraction</li>
